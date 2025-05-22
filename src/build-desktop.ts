@@ -18,6 +18,7 @@ export async function buildProject(
   debug: boolean,
   buildOpts: BuildOptions,
   initOpts: InitOptions,
+  retryAttempts: number,
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
@@ -63,7 +64,18 @@ export async function buildProject(
     rpmRelease: info.rpmRelease,
   };
 
-  await runner.execTauriCommand(['build'], [...tauriArgs], root);
+  await runner.execTauriCommand(
+    ['build'],
+    [...tauriArgs],
+    root,
+    targetInfo.platform === 'macos'
+      ? {
+          TAURI_BUNDLER_DMG_IGNORE_CI:
+            process.env.TAURI_BUNDLER_DMG_IGNORE_CI ?? 'true',
+        }
+      : undefined,
+    retryAttempts,
+  );
 
   // on Linux, the app product name is converted to kebab-case and `()[]{}` will be removed
   // with tauri-cli 2.0.0-beta.19 deb and appimage will now use the product name as on the other platforms.
@@ -122,23 +134,48 @@ export async function buildProject(
 
     const winArtifacts: string[] = [];
 
+    // wix v1
+    if (app.version != app.wixAppVersion) {
+      langs.forEach((lang) => {
+        winArtifacts.push(
+          join(
+            artifactsPath,
+            `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi`,
+          ),
+          join(
+            artifactsPath,
+            `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.sig`,
+          ),
+          join(
+            artifactsPath,
+            `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`,
+          ),
+          join(
+            artifactsPath,
+            `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`,
+          ),
+        );
+      });
+    }
+
+    // wix v2
     langs.forEach((lang) => {
       winArtifacts.push(
         join(
           artifactsPath,
-          `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi`,
+          `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi`,
         ),
         join(
           artifactsPath,
-          `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.sig`,
+          `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.sig`,
         ),
         join(
           artifactsPath,
-          `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`,
+          `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip`,
         ),
         join(
           artifactsPath,
-          `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`,
+          `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip.sig`,
         ),
       );
     });

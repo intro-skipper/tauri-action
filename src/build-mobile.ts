@@ -11,6 +11,7 @@ export async function buildProject(
   android: boolean,
   debug: boolean,
   buildOpts: BuildOptions,
+  retryAttempts: number,
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
@@ -38,6 +39,8 @@ export async function buildProject(
     [android ? 'android' : 'ios', 'build'],
     [...tauriArgs],
     root,
+    undefined,
+    retryAttempts,
   );
 
   let artifacts: Artifact[] = [];
