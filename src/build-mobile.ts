@@ -48,7 +48,7 @@ export async function buildProject(
   if (android) {
     const artifactPaths = join(
       info.tauriPath,
-      'gen/android/app/build/outputs/',
+      'gen/android/build/outputs/',
     );
     artifacts = [
       // unsinged release apks
@@ -83,7 +83,7 @@ export async function buildProject(
       join(artifactPaths, 'bundle/x86Debug/app-x86-debug.aab'),
     ].map((path) => ({ path, arch: 'mobile' }));
   } else {
-    const artifactPaths = join(info.tauriPath, 'gen/apple/app/build/');
+    const artifactPaths = join(info.tauriPath, 'gen/apple/build/');
     // TODO: Confirm where the iOS project name actually comes from. it may be time for a glob pattern here to get the ipa without knowing the name.
     artifacts = [
       join(artifactPaths, `arm64/${info.name}.ipa`),
