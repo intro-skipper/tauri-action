@@ -48,7 +48,7 @@ export async function buildProject(
   if (android) {
     const artifactPaths = join(
       info.tauriPath,
-      'gen/android/build/outputs/',
+      'gen/android/app/build/outputs/',
     );
     artifacts = [
       // unsinged release apks
