@@ -81,7 +81,7 @@ export function renderNamePattern(
 }
 
 export function getAssetName(asset: Artifact, pattern?: string) {
-  // In a future version we may want to unify the naming schemes. For now we keep using the cli output.
+  // TODO(v1    ): In a future version we may want to unify the naming schemes. For now we keep using the cli output.
   // const debugPattern = asset.mode === 'debug' ? '_[mode]' : '';
   // const DEFAULT_PATTERN = `[name]_v[version]${debugPattern}_[platform]_[arch][ext]`;
   // pattern = pattern || DEFAULT_PATTERN;
@@ -93,13 +93,19 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     );
   } else {
     const base = basename(asset.path);
-    if (asset.mode === 'debug') {
-      return (
-        base.substring(0, base.length - asset.ext.length) + '-debug' + asset.ext
-      );
-    } else {
-      return base;
+    const name = base.substring(base.length + asset.ext.length);
+    let arch = '';
+    let dbg = '';
+
+    if (asset.ext === '.app.tar.gz' || asset.ext === '.app.tar.gz.sig') {
+      arch = '_' + asset.arch;
     }
+
+    if (asset.mode === 'debug') {
+      dbg = '-debug';
+    }
+
+    return name + arch + dbg;
   }
 }
 
