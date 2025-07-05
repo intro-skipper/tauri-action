@@ -144,6 +144,7 @@ async function run(): Promise<void> {
             basename(artifact.path),
           ]);
           artifact.path += '.tar.gz';
+          artifact.ext += '.tar.gz';
         } else if (artifact.path.endsWith('.app')) {
           // we can't upload a directory
           artifacts.splice(i, 1);
