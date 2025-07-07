@@ -81,7 +81,7 @@ export function renderNamePattern(
 }
 
 export function getAssetName(asset: Artifact, pattern?: string) {
-  // TODO(v1    ): In a future version we may want to unify the naming schemes. For now we keep using the cli output.
+  // TODO(v1): In a future version we may want to unify the naming schemes. For now we keep using the cli output.
   // const debugPattern = asset.mode === 'debug' ? '_[mode]' : '';
   // const DEFAULT_PATTERN = `[name]_v[version]${debugPattern}_[platform]_[arch][ext]`;
   // pattern = pattern || DEFAULT_PATTERN;
@@ -105,7 +105,7 @@ export function getAssetName(asset: Artifact, pattern?: string) {
       dbg = '-debug';
     }
 
-    return name + arch + dbg;
+    return name + arch + dbg + asset.ext;
   }
 }
 
