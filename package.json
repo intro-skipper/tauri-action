@@ -22,6 +22,7 @@
     "actions",
     "tauri"
   ],
+  "minimumReleaseAge": 4320,
   "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
@@ -44,7 +45,7 @@
     "typescript-eslint": "8.41.0"
   },
   "engines": {
-    "pnpm": "^10.0.0",
+    "pnpm": "^10.16.0",
     "node": ">=20"
   }
 }
