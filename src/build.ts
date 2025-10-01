@@ -20,6 +20,7 @@ export async function buildProject(
   buildOpts: BuildOptions,
   initOpts: InitOptions,
   retryAttempts: number,
+  uploadPlainBinary: boolean,
 ): Promise<Artifact[]> {
   const runner = await getRunner(root, buildOpts.tauriScript);
 
@@ -144,6 +145,18 @@ export async function buildProject(
         version: app.version,
       }),
     ];
+    if (uploadPlainBinary) {
+      artifacts.push(
+        createArtifact({
+          path: join(artifactsPath, `${app.name}`),
+          name: app.name,
+          debug,
+          platform: targetInfo.platform,
+          arch,
+          version: app.version,
+        }),
+      );
+    }
   } else if (targetInfo.platform === 'windows') {
     if (arch.startsWith('i')) {
       arch = 'x86';
@@ -314,6 +327,18 @@ export async function buildProject(
         version: app.version,
       }),
     );
+    if (uploadPlainBinary) {
+      artifacts.push(
+        createArtifact({
+          path: join(artifactsPath, `${app.name}.exe`),
+          name: app.name,
+          debug,
+          platform: targetInfo.platform,
+          arch,
+          version: app.version,
+        }),
+      );
+    }
 
     artifacts = winArtifacts;
   } else {
@@ -480,6 +505,18 @@ export async function buildProject(
             `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`,
           ),
           name: linuxFileAppName,
+          debug,
+          platform: targetInfo.platform,
+          arch: appImageArch,
+          version: app.version,
+        }),
+      );
+    }
+    if (uploadPlainBinary) {
+      artifacts.push(
+        createArtifact({
+          path: join(artifactsPath, `${app.name}`),
+          name: app.name,
           debug,
           platform: targetInfo.platform,
           arch: appImageArch,
