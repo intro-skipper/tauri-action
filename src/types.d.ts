@@ -26,6 +26,7 @@ export interface Artifact {
   ext: string;
   version: string;
   setup: '-setup' | '';
+  _setup: '_setup' | '';
 }
 
 export interface BuildOptions {

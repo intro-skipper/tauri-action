@@ -53194,7 +53194,7 @@ function getAssetName(asset, pattern) {
     if (asset.name === 'latest.json') {
         return 'latest.json';
     }
-    if (pattern && asset.name !== 'binary') {
+    if (pattern) {
         return renderNamePattern(pattern, asset);
     }
     else {
@@ -53226,6 +53226,7 @@ function createArtifact({ path, name, debug, platform, arch, bundle, version, })
         ext,
         version,
         setup: bundle == 'nsis' ? '-setup' : '',
+        _setup: bundle == 'nsis' ? '_setup' : '',
     };
 }
 function getPackageJson(root) {

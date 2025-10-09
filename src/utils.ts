@@ -92,7 +92,7 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     return 'latest.json';
   }
 
-  if (pattern && asset.name !== 'binary') {
+  if (pattern) {
     return renderNamePattern(
       pattern,
       asset as unknown as Record<string, string>,
@@ -147,6 +147,7 @@ export function createArtifact({
     ext,
     version,
     setup: bundle == 'nsis' ? '-setup' : '',
+    _setup: bundle == 'nsis' ? '_setup' : '',
   };
 }
 

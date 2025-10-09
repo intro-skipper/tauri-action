@@ -156,9 +156,10 @@ These inputs allow you to modify the GitHub release.
 - If you provide a `tagName` to an existing release, `releaseDraft` must be set to `true` if the existing release is a draft.
 - If you only want to build the app without having the action upload any assets, for example if you want to only use [`actions/upload-artifact`](https://github.com/actions/upload-artifact), simply omit `tagName`, `releaseName` and `releaseId`.
 - Only enable `uploadPlainBinary` if you are sure what you're doing since Tauri doesn't officially support a portable mode, especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
-- `assetNamePattern` offers a few variables that will be replaced automatically if encapsulated in `[]`. Currently available variables are: `[name]`, `[version]`, `[platform]`, `[arch]`, `[mode]`, `[setup]`, `[ext]`.
-  - `[mode]`: `debug` or `release`, depending on `includeDebug` and `includeRelease`.
+- `assetNamePattern` offers a few variables that will be replaced automatically if encapsulated in `[]`. Currently available variables are: `[name]`, `[version]`, `[platform]`, `[arch]`, `[mode]`, `[setup]`, `[_setup]`, `[ext]`.
+  - `[mode]` will be replaced with `debug` or `release`, depending on `includeDebug` and `includeRelease`.
   - `[setup]` will be replaced with `-setup` which can be used to differenciate between the NSIS installer and the binary from `uploadPlainBinary`. For all other bundle types it will be an empty string.
+  - `[_setup]` behaves like `[setup]` but with `_setup` instead of `-setup`.
 
 ## Partners
 
