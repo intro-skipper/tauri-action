@@ -42131,8 +42131,8 @@ var external_node_fs_ = __nccwpck_require__(3024);
 var external_node_path_ = __nccwpck_require__(6760);
 // EXTERNAL MODULE: ./src/config.ts
 var src_config = __nccwpck_require__(6878);
-// EXTERNAL MODULE: ./src/utils.ts + 149 modules
-var utils = __nccwpck_require__(9576);
+// EXTERNAL MODULE: ./src/utils.ts + 148 modules
+var utils = __nccwpck_require__(4619);
 ;// CONCATENATED MODULE: ./src/init-project.ts
 
 
@@ -42287,6 +42287,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
+                bundle: '',
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42295,6 +42296,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
+                bundle: '',
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42303,6 +42305,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
+                bundle: '',
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42311,6 +42314,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
+                bundle: '',
                 version: app.version,
             }),
         ];
@@ -42347,6 +42351,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                     debug,
                     platform: targetInfo.platform,
                     arch,
+                    bundle: 'msi',
                     version: app.version,
                 }), (0,utils/* createArtifact */.Dg)({
                     path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.sig`),
@@ -42354,6 +42359,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                     debug,
                     platform: targetInfo.platform,
                     arch,
+                    bundle: 'msi',
                     version: app.version,
                 }), (0,utils/* createArtifact */.Dg)({
                     path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip`),
@@ -42361,6 +42367,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                     debug,
                     platform: targetInfo.platform,
                     arch,
+                    bundle: 'msi',
                     version: app.version,
                 }), (0,utils/* createArtifact */.Dg)({
                     path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.wixAppVersion}_${arch}_${lang}.msi.zip.sig`),
@@ -42368,6 +42375,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                     debug,
                     platform: targetInfo.platform,
                     arch,
+                    bundle: 'msi',
                     version: app.version,
                 }));
             });
@@ -42380,6 +42388,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
+                bundle: 'msi',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.sig`),
@@ -42387,6 +42396,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
+                bundle: 'msi',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip`),
@@ -42394,6 +42404,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
+                bundle: 'msi',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/msi/${app.name}_${app.version}_${arch}_${lang}.msi.zip.sig`),
@@ -42401,6 +42412,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
+                bundle: 'msi',
                 version: app.version,
             }));
         });
@@ -42410,6 +42422,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
             debug,
             platform: targetInfo.platform,
             arch,
+            bundle: 'nsis',
             version: app.version,
         }), (0,utils/* createArtifact */.Dg)({
             path: (0,external_node_path_.join)(artifactsPath, `bundle/nsis/${app.name}_${app.version}_${arch}-setup.exe.sig`),
@@ -42417,6 +42430,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
             debug,
             platform: targetInfo.platform,
             arch,
+            bundle: 'nsis',
             version: app.version,
         }), (0,utils/* createArtifact */.Dg)({
             path: (0,external_node_path_.join)(artifactsPath, `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip`),
@@ -42424,6 +42438,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
             debug,
             platform: targetInfo.platform,
             arch,
+            bundle: 'nsis',
             version: app.version,
         }), (0,utils/* createArtifact */.Dg)({
             path: (0,external_node_path_.join)(artifactsPath, `bundle/nsis/${app.name}_${app.version}_${arch}-setup.nsis.zip.sig`),
@@ -42431,6 +42446,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
             debug,
             platform: targetInfo.platform,
             arch,
+            bundle: 'nsis',
             version: app.version,
         }));
         artifacts = winArtifacts;
@@ -42470,6 +42486,16 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch: debianArch,
+                bundle: 'deb',
+                version: app.version,
+            }),
+            (0,utils/* createArtifact */.Dg)({
+                path: (0,external_node_path_.join)(artifactsPath, `bundle/deb/${app.name}_${app.version}_${debianArch}.deb.sig`),
+                name: app.name,
+                debug,
+                platform: targetInfo.platform,
+                arch: debianArch,
+                bundle: 'deb',
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42478,6 +42504,16 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch: rpmArch,
+                bundle: 'rpm',
+                version: app.version,
+            }),
+            (0,utils/* createArtifact */.Dg)({
+                path: (0,external_node_path_.join)(artifactsPath, `bundle/rpm/${app.name}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm.sig`),
+                name: app.name,
+                debug,
+                platform: targetInfo.platform,
+                arch: rpmArch,
+                bundle: 'rpm',
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42486,6 +42522,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch: appImageArch,
+                bundle: 'appimage',
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42494,6 +42531,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch: appImageArch,
+                bundle: 'appimage',
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42502,6 +42540,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch: appImageArch,
+                bundle: 'appimage',
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42510,6 +42549,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch: appImageArch,
+                bundle: 'appimage',
                 version: app.version,
             }),
         ];
@@ -42520,6 +42560,15 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch: debianArch,
+                bundle: 'deb',
+                version: app.version,
+            }), (0,utils/* createArtifact */.Dg)({
+                path: (0,external_node_path_.join)(artifactsPath, `bundle/deb/${linuxFileAppName}_${app.version}_${debianArch}.deb.sig`),
+                name: linuxFileAppName,
+                debug,
+                platform: targetInfo.platform,
+                arch: debianArch,
+                bundle: 'deb',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm`),
@@ -42527,6 +42576,15 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch: rpmArch,
+                bundle: 'rpm',
+                version: app.version,
+            }), (0,utils/* createArtifact */.Dg)({
+                path: (0,external_node_path_.join)(artifactsPath, `bundle/rpm/${linuxFileAppName}-${app.version}-${app.rpmRelease}.${rpmArch}.rpm.sig`),
+                name: linuxFileAppName,
+                debug,
+                platform: targetInfo.platform,
+                arch: rpmArch,
+                bundle: 'rpm',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage`),
@@ -42534,6 +42592,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch: appImageArch,
+                bundle: 'appimage',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.sig`),
@@ -42541,6 +42600,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch: appImageArch,
+                bundle: 'appimage',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz`),
@@ -42548,6 +42608,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch: appImageArch,
+                bundle: 'appimage',
                 version: app.version,
             }), (0,utils/* createArtifact */.Dg)({
                 path: (0,external_node_path_.join)(artifactsPath, `bundle/appimage/${linuxFileAppName}_${app.version}_${appImageArch}.AppImage.tar.gz.sig`),
@@ -42555,6 +42616,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch: appImageArch,
+                bundle: 'appimage',
                 version: app.version,
             }));
         }
@@ -42564,6 +42626,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
         artifacts.push((0,utils/* createArtifact */.Dg)({
             path: (0,external_node_path_.join)(artifactsPath, `${app.mainBinaryName}${ext}`),
             name: 'binary', // app.mainBinaryName,
+            bundle: '',
             debug,
             platform: targetInfo.platform,
             arch,
@@ -42967,7 +43030,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _upload_release_assets__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(1103);
 /* harmony import */ var _upload_version_json__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(6715);
 /* harmony import */ var _build__WEBPACK_IMPORTED_MODULE_7__ = __nccwpck_require__(151);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_8__ = __nccwpck_require__(9576);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_8__ = __nccwpck_require__(4619);
 
 
 
@@ -43126,7 +43189,7 @@ __webpack_async_result__();
 /* harmony import */ var node_fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(node_fs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(4903);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(9576);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(4619);
 
 
 
@@ -43194,7 +43257,7 @@ async function uploadAssets(owner, repo, releaseId, assets, retryAttempts, asset
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(4903);
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _upload_release_assets__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(1103);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(9576);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(4619);
 
 
 
@@ -43253,79 +43316,109 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
                 assetName,
                 path: artifact.path,
                 arch: artifact.arch,
+                bundle: artifact.bundle,
             });
         }
     }
-    const signatureFiles = filteredAssets.filter((asset) => {
-        return asset.assetName.endsWith('.sig');
-    });
-    function signaturePriority(signaturePath) {
-        const priorities = updaterJsonPreferNsis
-            ? unzippedSig
+    const assetsByBundle = new Map();
+    for (const filteredAsset of filteredAssets) {
+        if (!assetsByBundle.has(filteredAsset.bundle)) {
+            assetsByBundle.set(filteredAsset.bundle, [filteredAsset]);
+        }
+        else {
+            assetsByBundle.get(filteredAsset.bundle)?.push(filteredAsset);
+        }
+    }
+    for (const [bundleType, bundleAssets] of assetsByBundle) {
+        const signatureFiles = bundleAssets.filter((asset) => {
+            return asset.assetName.endsWith('.sig');
+        });
+        function signaturePriority(signaturePath) {
+            const priorities = unzippedSig
                 ? ['.exe.sig', '.msi.sig']
-                : ['.nsis.zip.sig', '.msi.zip.sig']
-            : unzippedSig
-                ? ['.msi.sig', '.exe.sig']
-                : ['.msi.zip.sig', '.nsis.zip.sig'];
-        for (const [index, extension] of priorities.entries()) {
-            if (signaturePath.endsWith(extension)) {
-                return 100 - index;
+                : ['.nsis.zip.sig', '.msi.zip.sig'];
+            for (const [index, extension] of priorities.entries()) {
+                if (signaturePath.endsWith(extension)) {
+                    return 100 - index;
+                }
+            }
+            return 0;
+        }
+        signatureFiles.sort((a, b) => {
+            return signaturePriority(b.path) - signaturePriority(a.path);
+        });
+        const signatureFile = signatureFiles[0];
+        if (!signatureFile) {
+            console.warn('Signature not found for the updater JSON. Skipping upload...');
+            return;
+        }
+        const updaterName = (0,node_path__WEBPACK_IMPORTED_MODULE_1__.basename)(signatureFile.assetName, (0,node_path__WEBPACK_IMPORTED_MODULE_1__.extname)(signatureFile.assetName));
+        let downloadUrl = bundleAssets.find((asset) => asset.assetName == updaterName)?.downloadUrl;
+        if (!downloadUrl) {
+            console.warn('Asset not found for the updater JSON. Skipping upload...');
+            continue;
+        }
+        // Untagged release downloads won't work after the release was published
+        downloadUrl = downloadUrl.replace(/\/download\/(untagged-[^/]+)\//, tagName ? `/download/${tagName}/` : '/latest/download/');
+        let os = targetInfo.platform;
+        if (os === 'macos') {
+            os = 'darwin';
+        }
+        let arch = signatureFile.arch;
+        arch =
+            arch === 'amd64' || arch === 'x86_64' || arch === 'x64'
+                ? 'x86_64'
+                : arch === 'x86' || arch === 'i386'
+                    ? 'i686'
+                    : arch === 'arm'
+                        ? 'armv7'
+                        : arch === 'arm64'
+                            ? 'aarch64'
+                            : arch;
+        // Expected targets: https://github.com/tauri-apps/tauri/blob/fd125f76d768099dc3d4b2d4114349ffc31ffac9/core/tauri/src/updater/core.rs#L856
+        if (os === 'darwin' && arch === 'universal') {
+            // Don't overwrite native builds
+            if (!versionContent.platforms['darwin-aarch64']) {
+                versionContent.platforms['darwin-aarch64'] = {
+                    signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
+                    url: downloadUrl,
+                };
+            }
+            if (!versionContent.platforms['darwin-x86_64']) {
+                versionContent.platforms['darwin-x86_64'] = {
+                    signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
+                    url: downloadUrl,
+                };
             }
         }
-        return 0;
-    }
-    signatureFiles.sort((a, b) => {
-        return signaturePriority(b.path) - signaturePriority(a.path);
-    });
-    const signatureFile = signatureFiles[0];
-    if (!signatureFile) {
-        console.warn('Signature not found for the updater JSON. Skipping upload...');
-        return;
-    }
-    const updaterName = (0,node_path__WEBPACK_IMPORTED_MODULE_1__.basename)(signatureFile.assetName, (0,node_path__WEBPACK_IMPORTED_MODULE_1__.extname)(signatureFile.assetName));
-    let downloadUrl = filteredAssets.find((asset) => asset.assetName == updaterName)?.downloadUrl;
-    if (!downloadUrl) {
-        console.warn('Asset not found for the updater JSON. Skipping upload...');
-        return;
-    }
-    // Untagged release downloads won't work after the release was published
-    downloadUrl = downloadUrl.replace(/\/download\/(untagged-[^/]+)\//, tagName ? `/download/${tagName}/` : '/latest/download/');
-    let os = targetInfo.platform;
-    if (os === 'macos') {
-        os = 'darwin';
-    }
-    let arch = signatureFile.arch;
-    arch =
-        arch === 'amd64' || arch === 'x86_64' || arch === 'x64'
-            ? 'x86_64'
-            : arch === 'x86' || arch === 'i386'
-                ? 'i686'
-                : arch === 'arm'
-                    ? 'armv7'
-                    : arch === 'arm64'
-                        ? 'aarch64'
-                        : arch;
-    // Expected targets: https://github.com/tauri-apps/tauri/blob/fd125f76d768099dc3d4b2d4114349ffc31ffac9/core/tauri/src/updater/core.rs#L856
-    if (os === 'darwin' && arch === 'universal') {
-        // Don't overwrite native builds
-        if (!versionContent.platforms['darwin-aarch64']) {
-            versionContent.platforms['darwin-aarch64'] = {
+        if (updaterJsonKeepUniversal || os !== 'darwin' || arch !== 'universal') {
+            let index = `${os}-${arch}`;
+            if (bundleType == 'appimage') {
+                versionContent.platforms[index] = {
+                    signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
+                    url: downloadUrl,
+                };
+            }
+            else if (bundleType == 'nsis' && updaterJsonPreferNsis) {
+                versionContent.platforms[index] = {
+                    signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
+                    url: downloadUrl,
+                };
+            }
+            else if (bundleType == 'msi' && !updaterJsonPreferNsis) {
+                versionContent.platforms[index] = {
+                    signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
+                    url: downloadUrl,
+                };
+            }
+            if (bundleType.length > 0) {
+                index += `-${bundleType}`;
+            }
+            versionContent.platforms[index] = {
                 signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
                 url: downloadUrl,
             };
         }
-        if (!versionContent.platforms['darwin-x86_64']) {
-            versionContent.platforms['darwin-x86_64'] = {
-                signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
-                url: downloadUrl,
-            };
-        }
-    }
-    if (updaterJsonKeepUniversal || os !== 'darwin' || arch !== 'universal') {
-        versionContent.platforms[`${os}-${arch}`] = {
-            signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
-            url: downloadUrl,
-        };
     }
     (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.writeFileSync)(versionFile, JSON.stringify(versionContent, null, 2));
     if (asset) {
@@ -43343,6 +43436,7 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
         debug: false,
         platform: targetInfo.platform,
         arch: '',
+        bundle: '',
         version,
     });
     await (0,_upload_release_assets__WEBPACK_IMPORTED_MODULE_3__/* .uploadAssets */ .r)(owner, repo, releaseId, [artifact], retryAttempts);
@@ -43351,7 +43445,7 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
 
 /***/ }),
 
-/***/ 9576:
+/***/ 4619:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -52513,231 +52607,6 @@ const {
 } = getIpcExport();
 
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/@sindresorhus+merge-streams@2.3.0/node_modules/@sindresorhus/merge-streams/index.js
-
-
-
-
-function merge_streams_mergeStreams(streams) {
-	if (!Array.isArray(streams)) {
-		throw new TypeError(`Expected an array, got \`${typeof streams}\`.`);
-	}
-
-	for (const stream of streams) {
-		merge_streams_validateStream(stream);
-	}
-
-	const objectMode = streams.some(({readableObjectMode}) => readableObjectMode);
-	const highWaterMark = merge_streams_getHighWaterMark(streams, objectMode);
-	const passThroughStream = new merge_streams_MergedStream({
-		objectMode,
-		writableHighWaterMark: highWaterMark,
-		readableHighWaterMark: highWaterMark,
-	});
-
-	for (const stream of streams) {
-		passThroughStream.add(stream);
-	}
-
-	if (streams.length === 0) {
-		merge_streams_endStream(passThroughStream);
-	}
-
-	return passThroughStream;
-}
-
-const merge_streams_getHighWaterMark = (streams, objectMode) => {
-	if (streams.length === 0) {
-		// @todo Use `node:stream` `getDefaultHighWaterMark(objectMode)` in next major release
-		return 16_384;
-	}
-
-	const highWaterMarks = streams
-		.filter(({readableObjectMode}) => readableObjectMode === objectMode)
-		.map(({readableHighWaterMark}) => readableHighWaterMark);
-	return Math.max(...highWaterMarks);
-};
-
-class merge_streams_MergedStream extends external_node_stream_.PassThrough {
-	#streams = new Set([]);
-	#ended = new Set([]);
-	#aborted = new Set([]);
-	#onFinished;
-
-	add(stream) {
-		merge_streams_validateStream(stream);
-
-		if (this.#streams.has(stream)) {
-			return;
-		}
-
-		this.#streams.add(stream);
-
-		this.#onFinished ??= merge_streams_onMergedStreamFinished(this, this.#streams);
-		merge_streams_endWhenStreamsDone({
-			passThroughStream: this,
-			stream,
-			streams: this.#streams,
-			ended: this.#ended,
-			aborted: this.#aborted,
-			onFinished: this.#onFinished,
-		});
-
-		stream.pipe(this, {end: false});
-	}
-
-	remove(stream) {
-		merge_streams_validateStream(stream);
-
-		if (!this.#streams.has(stream)) {
-			return false;
-		}
-
-		stream.unpipe(this);
-		return true;
-	}
-}
-
-const merge_streams_onMergedStreamFinished = async (passThroughStream, streams) => {
-	merge_streams_updateMaxListeners(passThroughStream, merge_streams_PASSTHROUGH_LISTENERS_COUNT);
-	const controller = new AbortController();
-
-	try {
-		await Promise.race([
-			merge_streams_onMergedStreamEnd(passThroughStream, controller),
-			merge_streams_onInputStreamsUnpipe(passThroughStream, streams, controller),
-		]);
-	} finally {
-		controller.abort();
-		merge_streams_updateMaxListeners(passThroughStream, -merge_streams_PASSTHROUGH_LISTENERS_COUNT);
-	}
-};
-
-const merge_streams_onMergedStreamEnd = async (passThroughStream, {signal}) => {
-	await (0,external_node_stream_promises_namespaceObject.finished)(passThroughStream, {signal, cleanup: true});
-};
-
-const merge_streams_onInputStreamsUnpipe = async (passThroughStream, streams, {signal}) => {
-	for await (const [unpipedStream] of (0,external_node_events_.on)(passThroughStream, 'unpipe', {signal})) {
-		if (streams.has(unpipedStream)) {
-			unpipedStream.emit(unpipeEvent);
-		}
-	}
-};
-
-const merge_streams_validateStream = stream => {
-	if (typeof stream?.pipe !== 'function') {
-		throw new TypeError(`Expected a readable stream, got: \`${typeof stream}\`.`);
-	}
-};
-
-const merge_streams_endWhenStreamsDone = async ({passThroughStream, stream, streams, ended, aborted, onFinished}) => {
-	merge_streams_updateMaxListeners(passThroughStream, merge_streams_PASSTHROUGH_LISTENERS_PER_STREAM);
-	const controller = new AbortController();
-
-	try {
-		await Promise.race([
-			merge_streams_afterMergedStreamFinished(onFinished, stream),
-			merge_streams_onInputStreamEnd({passThroughStream, stream, streams, ended, aborted, controller}),
-			merge_streams_onInputStreamUnpipe({stream, streams, ended, aborted, controller}),
-		]);
-	} finally {
-		controller.abort();
-		merge_streams_updateMaxListeners(passThroughStream, -merge_streams_PASSTHROUGH_LISTENERS_PER_STREAM);
-	}
-
-	if (streams.size === ended.size + aborted.size) {
-		if (ended.size === 0 && aborted.size > 0) {
-			merge_streams_abortStream(passThroughStream);
-		} else {
-			merge_streams_endStream(passThroughStream);
-		}
-	}
-};
-
-// This is the error thrown by `finished()` on `stream.destroy()`
-const merge_streams_isAbortError = error => error?.code === 'ERR_STREAM_PREMATURE_CLOSE';
-
-const merge_streams_afterMergedStreamFinished = async (onFinished, stream) => {
-	try {
-		await onFinished;
-		merge_streams_abortStream(stream);
-	} catch (error) {
-		if (merge_streams_isAbortError(error)) {
-			merge_streams_abortStream(stream);
-		} else {
-			merge_streams_errorStream(stream, error);
-		}
-	}
-};
-
-const merge_streams_onInputStreamEnd = async ({passThroughStream, stream, streams, ended, aborted, controller: {signal}}) => {
-	try {
-		await (0,external_node_stream_promises_namespaceObject.finished)(stream, {signal, cleanup: true, readable: true, writable: false});
-		if (streams.has(stream)) {
-			ended.add(stream);
-		}
-	} catch (error) {
-		if (signal.aborted || !streams.has(stream)) {
-			return;
-		}
-
-		if (merge_streams_isAbortError(error)) {
-			aborted.add(stream);
-		} else {
-			merge_streams_errorStream(passThroughStream, error);
-		}
-	}
-};
-
-const merge_streams_onInputStreamUnpipe = async ({stream, streams, ended, aborted, controller: {signal}}) => {
-	await (0,external_node_events_.once)(stream, unpipeEvent, {signal});
-	streams.delete(stream);
-	ended.delete(stream);
-	aborted.delete(stream);
-};
-
-const unpipeEvent = Symbol('unpipe');
-
-const merge_streams_endStream = stream => {
-	if (stream.writable) {
-		stream.end();
-	}
-};
-
-const merge_streams_abortStream = stream => {
-	if (stream.readable || stream.writable) {
-		stream.destroy();
-	}
-};
-
-// `stream.destroy(error)` crashes the process with `uncaughtException` if no `error` event listener exists on `stream`.
-// We take care of error handling on user behalf, so we do not want this to happen.
-const merge_streams_errorStream = (stream, error) => {
-	if (!stream.destroyed) {
-		stream.once('error', merge_streams_noop);
-		stream.destroy(error);
-	}
-};
-
-const merge_streams_noop = () => {};
-
-const merge_streams_updateMaxListeners = (passThroughStream, increment) => {
-	const maxListeners = passThroughStream.getMaxListeners();
-	if (maxListeners !== 0 && maxListeners !== Number.POSITIVE_INFINITY) {
-		passThroughStream.setMaxListeners(maxListeners + increment);
-	}
-};
-
-// Number of times `passThroughStream.on()` is called regardless of streams:
-//  - once due to `finished(passThroughStream)`
-//  - once due to `on(passThroughStream)`
-const merge_streams_PASSTHROUGH_LISTENERS_COUNT = 2;
-
-// Number of times `passThroughStream.on()` is called per stream:
-//  - once due to `stream.pipe(passThroughStream)`
-const merge_streams_PASSTHROUGH_LISTENERS_PER_STREAM = 1;
-
 // EXTERNAL MODULE: ./node_modules/.pnpm/fast-glob@3.3.3/node_modules/fast-glob/out/index.js
 var out = __nccwpck_require__(197);
 ;// CONCATENATED MODULE: external "node:fs/promises"
@@ -52799,10 +52668,10 @@ function slash(path) {
 	return path.replace(/\\/g, '/');
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@14.1.0/node_modules/globby/utilities.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@15.0.0/node_modules/globby/utilities.js
 const isNegativePattern = pattern => pattern[0] === '!';
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@14.1.0/node_modules/globby/ignore.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@15.0.0/node_modules/globby/ignore.js
 
 
 
@@ -52826,9 +52695,41 @@ const ignoreFilesGlobOptions = {
 
 const GITIGNORE_FILES_PATTERN = '**/.gitignore';
 
-const applyBaseToPattern = (pattern, base) => isNegativePattern(pattern)
-	? '!' + external_node_path_.posix.join(base, pattern.slice(1))
-	: external_node_path_.posix.join(base, pattern);
+// Apply base path to gitignore patterns based on .gitignore spec 2.22.1
+// https://git-scm.com/docs/gitignore#_pattern_format
+// See also https://github.com/sindresorhus/globby/issues/146
+const applyBaseToPattern = (pattern, base) => {
+	if (!base) {
+		return pattern;
+	}
+
+	const isNegative = isNegativePattern(pattern);
+	const cleanPattern = isNegative ? pattern.slice(1) : pattern;
+
+	// Check if pattern has non-trailing slashes
+	const slashIndex = cleanPattern.indexOf('/');
+	const hasNonTrailingSlash = slashIndex !== -1 && slashIndex !== cleanPattern.length - 1;
+
+	let result;
+	if (!hasNonTrailingSlash) {
+		// "If there is no separator at the beginning or middle of the pattern,
+		// then the pattern may also match at any level below the .gitignore level."
+		// So patterns like '*.log' or 'temp' or 'build/' (trailing slash) match recursively.
+		result = external_node_path_.posix.join(base, '**', cleanPattern);
+	} else if (cleanPattern.startsWith('/')) {
+		// "If there is a separator at the beginning [...] of the pattern,
+		// then the pattern is relative to the directory level of the particular .gitignore file itself."
+		// Leading slash anchors the pattern to the .gitignore's directory.
+		result = external_node_path_.posix.join(base, cleanPattern.slice(1));
+	} else {
+		// "If there is a separator [...] middle [...] of the pattern,
+		// then the pattern is relative to the directory level of the particular .gitignore file itself."
+		// Patterns like 'src/foo' are relative to the .gitignore's directory.
+		result = external_node_path_.posix.join(base, cleanPattern);
+	}
+
+	return isNegative ? '!' + result : result;
+};
 
 const parseIgnoreFile = (file, cwd) => {
 	const base = slash(external_node_path_.relative(cwd, external_node_path_.dirname(file.filePath)));
@@ -52849,6 +52750,20 @@ const toRelativePath = (fileOrDirectory, cwd) => {
 		throw new Error(`Path ${fileOrDirectory} is not in cwd ${cwd}`);
 	}
 
+	// Normalize relative paths:
+	// - Git treats './foo' as 'foo' when checking against patterns
+	// - Patterns starting with './' in .gitignore are invalid and don't match anything
+	// - The ignore library expects normalized paths without './' prefix
+	if (fileOrDirectory.startsWith('./')) {
+		return fileOrDirectory.slice(2);
+	}
+
+	// Paths with ../ point outside cwd and cannot match patterns from this directory
+	// Return undefined to indicate this path is outside scope
+	if (fileOrDirectory.startsWith('../')) {
+		return undefined;
+	}
+
 	return fileOrDirectory;
 };
 
@@ -52859,6 +52774,11 @@ const getIsIgnoredPredicate = (files, cwd) => {
 	return fileOrDirectory => {
 		fileOrDirectory = toPath(fileOrDirectory);
 		fileOrDirectory = toRelativePath(fileOrDirectory, cwd);
+		// If path is outside cwd (undefined), it can't be ignored by patterns in cwd
+		if (fileOrDirectory === undefined) {
+			return false;
+		}
+
 		return fileOrDirectory ? ignores.ignores(slash(fileOrDirectory)) : false;
 	};
 };
@@ -52881,12 +52801,10 @@ const isIgnoredByIgnoreFiles = async (patterns, options) => {
 		...ignoreFilesGlobOptions,
 	});
 
-	const files = await Promise.all(
-		paths.map(async filePath => ({
-			filePath,
-			content: await external_node_fs_promises_namespaceObject.readFile(filePath, 'utf8'),
-		})),
-	);
+	const files = await Promise.all(paths.map(async filePath => ({
+		filePath,
+		content: await external_node_fs_promises_namespaceObject.readFile(filePath, 'utf8'),
+	})));
 
 	return getIsIgnoredPredicate(files, cwd);
 };
@@ -52913,7 +52831,8 @@ const isIgnoredByIgnoreFilesSync = (patterns, options) => {
 const isGitIgnored = options => isIgnoredByIgnoreFiles(GITIGNORE_FILES_PATTERN, options);
 const isGitIgnoredSync = options => isIgnoredByIgnoreFilesSync(GITIGNORE_FILES_PATTERN, options);
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@14.1.0/node_modules/globby/index.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@15.0.0/node_modules/globby/index.js
+
 
 
 
@@ -52935,6 +52854,19 @@ const normalizePathForDirectoryGlob = (filePath, cwd) => {
 	return external_node_path_.isAbsolute(path) ? path : external_node_path_.join(cwd, path);
 };
 
+const shouldExpandGlobstarDirectory = pattern => {
+	const match = pattern?.match(/\*\*\/([^/]+)$/);
+	if (!match) {
+		return false;
+	}
+
+	const dirname = match[1];
+	const hasWildcards = /[*?[\]{}]/.test(dirname);
+	const hasExtension = external_node_path_.extname(dirname) && !dirname.startsWith('.');
+
+	return !hasWildcards && !hasExtension;
+};
+
 const getDirectoryGlob = ({directoryPath, files, extensions}) => {
 	const extensionGlob = extensions?.length > 0 ? `.${extensions.length > 1 ? `{${extensions.join(',')}}` : extensions[0]}` : '';
 	return files
@@ -52947,9 +52879,19 @@ const directoryToGlob = async (directoryPaths, {
 	files,
 	extensions,
 } = {}) => {
-	const globs = await Promise.all(directoryPaths.map(async directoryPath =>
-		(await isDirectory(normalizePathForDirectoryGlob(directoryPath, cwd))) ? getDirectoryGlob({directoryPath, files, extensions}) : directoryPath),
-	);
+	const globs = await Promise.all(directoryPaths.map(async directoryPath => {
+		// Check pattern without negative prefix
+		const checkPattern = isNegativePattern(directoryPath) ? directoryPath.slice(1) : directoryPath;
+
+		// Expand globstar directory patterns like **/dirname to **/dirname/**
+		if (shouldExpandGlobstarDirectory(checkPattern)) {
+			return getDirectoryGlob({directoryPath, files, extensions});
+		}
+
+		// Original logic for checking actual directories
+		const pathToCheck = normalizePathForDirectoryGlob(directoryPath, cwd);
+		return (await isDirectory(pathToCheck)) ? getDirectoryGlob({directoryPath, files, extensions}) : directoryPath;
+	}));
 
 	return globs.flat();
 };
@@ -52958,7 +52900,19 @@ const directoryToGlobSync = (directoryPaths, {
 	cwd = external_node_process_namespaceObject.cwd(),
 	files,
 	extensions,
-} = {}) => directoryPaths.flatMap(directoryPath => isDirectorySync(normalizePathForDirectoryGlob(directoryPath, cwd)) ? getDirectoryGlob({directoryPath, files, extensions}) : directoryPath);
+} = {}) => directoryPaths.flatMap(directoryPath => {
+	// Check pattern without negative prefix
+	const checkPattern = isNegativePattern(directoryPath) ? directoryPath.slice(1) : directoryPath;
+
+	// Expand globstar directory patterns like **/dirname to **/dirname/**
+	if (shouldExpandGlobstarDirectory(checkPattern)) {
+		return getDirectoryGlob({directoryPath, files, extensions});
+	}
+
+	// Original logic for checking actual directories
+	const pathToCheck = normalizePathForDirectoryGlob(directoryPath, cwd);
+	return isDirectorySync(pathToCheck) ? getDirectoryGlob({directoryPath, files, extensions}) : directoryPath;
+});
 
 const toPatternsArray = patterns => {
 	patterns = [...new Set([patterns].flat())];
@@ -53012,16 +52966,12 @@ const getIgnoreFilesPatterns = options => {
 
 const getFilter = async options => {
 	const ignoreFilesPatterns = getIgnoreFilesPatterns(options);
-	return createFilterFunction(
-		ignoreFilesPatterns.length > 0 && await isIgnoredByIgnoreFiles(ignoreFilesPatterns, options),
-	);
+	return createFilterFunction(ignoreFilesPatterns.length > 0 && await isIgnoredByIgnoreFiles(ignoreFilesPatterns, options));
 };
 
 const getFilterSync = options => {
 	const ignoreFilesPatterns = getIgnoreFilesPatterns(options);
-	return createFilterFunction(
-		ignoreFilesPatterns.length > 0 && isIgnoredByIgnoreFilesSync(ignoreFilesPatterns, options),
-	);
+	return createFilterFunction(ignoreFilesPatterns.length > 0 && isIgnoredByIgnoreFilesSync(ignoreFilesPatterns, options));
 };
 
 const createFilterFunction = isIgnored => {
@@ -53094,21 +53044,19 @@ const generateTasks = async (patterns, options) => {
 
 	const directoryToGlobOptions = normalizeExpandDirectoriesOption(expandDirectories, cwd);
 
-	return Promise.all(
-		globTasks.map(async task => {
-			let {patterns, options} = task;
+	return Promise.all(globTasks.map(async task => {
+		let {patterns, options} = task;
 
-			[
-				patterns,
-				options.ignore,
-			] = await Promise.all([
-				directoryToGlob(patterns, directoryToGlobOptions),
-				directoryToGlob(options.ignore, {cwd}),
-			]);
+		[
+			patterns,
+			options.ignore,
+		] = await Promise.all([
+			directoryToGlob(patterns, directoryToGlobOptions),
+			directoryToGlob(options.ignore, {cwd}),
+		]);
 
-			return {patterns, options};
-		}),
-	);
+		return {patterns, options};
+	}));
 };
 
 const generateTasksSync = (patterns, options) => {
@@ -53153,17 +53101,20 @@ const globbyStream = normalizeArgumentsSync((patterns, options) => {
 	const tasks = generateTasksSync(patterns, options);
 	const filter = getFilterSync(options);
 	const streams = tasks.map(task => out.stream(task.patterns, task.options));
-	const stream = merge_streams_mergeStreams(streams).filter(fastGlobResult => filter(fastGlobResult));
 
-	// TODO: Make it return a web stream at some point.
+	if (streams.length === 0) {
+		return external_node_stream_.Readable.from([]);
+	}
+
+	const stream = mergeStreams(streams).filter(fastGlobResult => filter(fastGlobResult));
+
+	// Returning a web stream will require revisiting once Readable.toWeb integration is viable.
 	// return Readable.toWeb(stream);
 
 	return stream;
 });
 
-const isDynamicPattern = normalizeArgumentsSync(
-	(patterns, options) => patterns.some(pattern => out.isDynamicPattern(pattern, options)),
-);
+const isDynamicPattern = normalizeArgumentsSync((patterns, options) => patterns.some(pattern => out.isDynamicPattern(pattern, options)));
 
 const generateGlobTasks = normalizeArguments(generateTasks);
 const generateGlobTasksSync = normalizeArgumentsSync(generateTasksSync);
@@ -53190,7 +53141,9 @@ const extensions = [
     '.AppImage.tar.gz',
     '.AppImage.sig',
     '.AppImage',
+    '.deb.sig',
     '.deb',
+    '.rpm.sig',
     '.rpm',
     '.msi.zip.sig',
     '.msi.zip',
@@ -53259,7 +53212,7 @@ function getAssetName(asset, pattern) {
         return name + '_' + asset.platform + arch + dbg + asset.ext;
     }
 }
-function createArtifact({ path, name, debug, platform, arch, version, }) {
+function createArtifact({ path, name, debug, platform, arch, bundle, version, }) {
     const baseName = (0,external_node_path_.basename)(path);
     const exts = extensions.filter((s) => baseName.includes(s));
     const ext = exts[0] || (0,external_node_path_.extname)(path);
@@ -53269,6 +53222,7 @@ function createArtifact({ path, name, debug, platform, arch, version, }) {
         mode: debug ? 'debug' : 'release',
         platform: platform === 'macos' ? 'darwin' : platform,
         arch,
+        bundle,
         ext,
         version,
     };
