@@ -53225,6 +53225,7 @@ function createArtifact({ path, name, debug, platform, arch, bundle, version, })
         bundle,
         ext,
         version,
+        setup: bundle == 'nsis' ? '-setup' : '',
     };
 }
 function getPackageJson(root) {

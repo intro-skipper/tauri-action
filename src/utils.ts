@@ -146,6 +146,7 @@ export function createArtifact({
     bundle,
     ext,
     version,
+    setup: bundle == 'nsis' ? '-setup' : '',
   };
 }
 

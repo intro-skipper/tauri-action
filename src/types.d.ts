@@ -25,6 +25,7 @@ export interface Artifact {
   bundle: string;
   ext: string;
   version: string;
+  setup: '-setup' | '';
 }
 
 export interface BuildOptions {
