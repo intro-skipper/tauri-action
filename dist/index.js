@@ -42287,7 +42287,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
-                bundle: '',
+                bundle: 'dmg', // could be 'dmg' or 'app' depending on the usecase
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42296,7 +42296,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
-                bundle: '',
+                bundle: 'app',
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42305,7 +42305,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
-                bundle: '',
+                bundle: 'app',
                 version: app.version,
             }),
             (0,utils/* createArtifact */.Dg)({
@@ -42314,7 +42314,7 @@ async function buildProject(root, debug, buildOpts, initOpts, retryAttempts, upl
                 debug,
                 platform: targetInfo.platform,
                 arch,
-                bundle: '',
+                bundle: 'app',
                 version: app.version,
             }),
         ];
@@ -43320,46 +43320,44 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
             });
         }
     }
-    const assetsByBundle = new Map();
-    for (const filteredAsset of filteredAssets) {
-        if (!assetsByBundle.has(filteredAsset.bundle)) {
-            assetsByBundle.set(filteredAsset.bundle, [filteredAsset]);
+    const signatureFiles = filteredAssets.filter((asset) => {
+        return asset.assetName.endsWith('.sig');
+    });
+    function signaturePriority(signaturePath) {
+        if ((unzippedSig && signaturePath.endsWith('.AppImage.sig')) ||
+            (!unzippedSig && signaturePath.endsWith('.AppImage.tar.gz.sig'))) {
+            return 100;
         }
-        else {
-            assetsByBundle.get(filteredAsset.bundle)?.push(filteredAsset);
-        }
-    }
-    for (const [bundleType, bundleAssets] of assetsByBundle) {
-        const signatureFiles = bundleAssets.filter((asset) => {
-            return asset.assetName.endsWith('.sig');
-        });
-        function signaturePriority(signaturePath) {
-            const priorities = unzippedSig
+        const priorities = updaterJsonPreferNsis
+            ? unzippedSig
                 ? ['.exe.sig', '.msi.sig']
-                : ['.nsis.zip.sig', '.msi.zip.sig'];
-            for (const [index, extension] of priorities.entries()) {
-                if (signaturePath.endsWith(extension)) {
-                    return 100 - index;
-                }
+                : ['.nsis.zip.sig', '.msi.zip.sig']
+            : unzippedSig
+                ? ['.msi.sig', '.exe.sig']
+                : ['.msi.zip.sig', '.nsis.zip.sig'];
+        for (const [index, extension] of priorities.entries()) {
+            if (signaturePath.endsWith(extension)) {
+                return 100 - index;
             }
-            return 0;
         }
-        signatureFiles.sort((a, b) => {
-            return signaturePriority(b.path) - signaturePriority(a.path);
-        });
-        const signatureFile = signatureFiles[0];
-        if (!signatureFile) {
-            console.warn('Signature not found for the updater JSON. Skipping upload...');
-            return;
-        }
-        const updaterName = (0,node_path__WEBPACK_IMPORTED_MODULE_1__.basename)(signatureFile.assetName, (0,node_path__WEBPACK_IMPORTED_MODULE_1__.extname)(signatureFile.assetName));
-        let downloadUrl = bundleAssets.find((asset) => asset.assetName == updaterName)?.downloadUrl;
-        if (!downloadUrl) {
-            console.warn('Asset not found for the updater JSON. Skipping upload...');
+        return 0;
+    }
+    signatureFiles.sort((a, b) => {
+        return signaturePriority(b.path) - signaturePriority(a.path);
+    });
+    if (!signatureFiles[0]) {
+        console.warn('Signature not found for the updater JSON. Skipping upload...');
+        return;
+    }
+    for (const [idx, signatureFile] of signatureFiles.entries()) {
+        const updaterFileName = (0,node_path__WEBPACK_IMPORTED_MODULE_1__.basename)(signatureFile.assetName, (0,node_path__WEBPACK_IMPORTED_MODULE_1__.extname)(signatureFile.assetName));
+        let updaterFileDownloadUrl = filteredAssets.find((asset) => asset.assetName === updaterFileName)?.downloadUrl;
+        if (!updaterFileDownloadUrl) {
+            console.warn(`Updater asset belonging to signature file "${signatureFile.assetName}" not found.`);
             continue;
         }
         // Untagged release downloads won't work after the release was published
-        downloadUrl = downloadUrl.replace(/\/download\/(untagged-[^/]+)\//, tagName ? `/download/${tagName}/` : '/latest/download/');
+        updaterFileDownloadUrl = updaterFileDownloadUrl.replace(/\/download\/(untagged-[^/]+)\//, tagName ? `/download/${tagName}/` : '/latest/download/');
         let os = targetInfo.platform;
         if (os === 'macos') {
             os = 'darwin';
@@ -43375,48 +43373,50 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
                         : arch === 'arm64'
                             ? 'aarch64'
                             : arch;
-        // Expected targets: https://github.com/tauri-apps/tauri/blob/fd125f76d768099dc3d4b2d4114349ffc31ffac9/core/tauri/src/updater/core.rs#L856
-        if (os === 'darwin' && arch === 'universal') {
-            // Don't overwrite native builds
-            if (!versionContent.platforms['darwin-aarch64']) {
-                versionContent.platforms['darwin-aarch64'] = {
+        // This is our primary updater type we use for `{os}-{arch}`
+        if (idx === 0) {
+            if (os === 'darwin' && arch === 'universal') {
+                // Don't overwrite native builds
+                if (!versionContent.platforms['darwin-aarch64']) {
+                    versionContent.platforms['darwin-aarch64'] = {
+                        signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
+                        url: updaterFileDownloadUrl,
+                    };
+                }
+                if (!versionContent.platforms['darwin-x86_64']) {
+                    versionContent.platforms['darwin-x86_64'] = {
+                        signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
+                        url: updaterFileDownloadUrl,
+                    };
+                }
+            }
+            if (updaterJsonKeepUniversal || os !== 'darwin' || arch !== 'universal') {
+                versionContent.platforms[`${os}-${arch}`] = {
                     signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
-                    url: downloadUrl,
+                    url: updaterFileDownloadUrl,
                 };
             }
-            if (!versionContent.platforms['darwin-x86_64']) {
-                versionContent.platforms['darwin-x86_64'] = {
+        }
+        // This is for the new `{os}-{arch}-{installer}` format
+        if (os === 'darwin' && arch === 'universal') {
+            // Don't overwrite native builds
+            if (!versionContent.platforms['darwin-aarch64-app']) {
+                versionContent.platforms['darwin-aarch64-app'] = {
                     signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
-                    url: downloadUrl,
+                    url: updaterFileDownloadUrl,
+                };
+            }
+            if (!versionContent.platforms['darwin-x86_64-app']) {
+                versionContent.platforms['darwin-x86_64-app'] = {
+                    signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
+                    url: updaterFileDownloadUrl,
                 };
             }
         }
         if (updaterJsonKeepUniversal || os !== 'darwin' || arch !== 'universal') {
-            let index = `${os}-${arch}`;
-            if (bundleType == 'appimage') {
-                versionContent.platforms[index] = {
-                    signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
-                    url: downloadUrl,
-                };
-            }
-            else if (bundleType == 'nsis' && updaterJsonPreferNsis) {
-                versionContent.platforms[index] = {
-                    signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
-                    url: downloadUrl,
-                };
-            }
-            else if (bundleType == 'msi' && !updaterJsonPreferNsis) {
-                versionContent.platforms[index] = {
-                    signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
-                    url: downloadUrl,
-                };
-            }
-            if (bundleType.length > 0) {
-                index += `-${bundleType}`;
-            }
-            versionContent.platforms[index] = {
+            versionContent.platforms[`${os}-${arch}-${signatureFile.bundle}`] = {
                 signature: (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(signatureFile.path).toString(),
-                url: downloadUrl,
+                url: updaterFileDownloadUrl,
             };
         }
     }
