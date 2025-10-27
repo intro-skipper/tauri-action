@@ -2058,7 +2058,7 @@ const Context = __importStar(__nccwpck_require__(3077));
 const Utils = __importStar(__nccwpck_require__(8399));
 // octokit + plugins
 const core_1 = __nccwpck_require__(1772);
-const plugin_rest_endpoint_methods_1 = __nccwpck_require__(6316);
+const plugin_rest_endpoint_methods_1 = __nccwpck_require__(6363);
 const plugin_paginate_rest_1 = __nccwpck_require__(8633);
 exports.context = new Context.Context();
 const baseUrl = Utils.getApiBaseUrl();
@@ -7678,7 +7678,7 @@ paginateRest.VERSION = VERSION;
 
 /***/ }),
 
-/***/ 6316:
+/***/ 6363:
 /***/ ((module) => {
 
 
@@ -43357,7 +43357,9 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
             continue;
         }
         // Untagged release downloads won't work after the release was published
-        updaterFileDownloadUrl = updaterFileDownloadUrl.replace(/\/download\/(untagged-[^/]+)\//, tagName ? `/download/${tagName}/` : '/latest/download/');
+        updaterFileDownloadUrl = updaterFileDownloadUrl.replace(/\/download\/(untagged-[^/]+)\//, tagName
+            ? `/download/${encodeURIComponent(tagName)}/`
+            : '/latest/download/');
         let os = targetInfo.platform;
         if (os === 'macos') {
             os = 'darwin';
