@@ -4,7 +4,7 @@ import { basename, extname, resolve } from 'node:path';
 import { getOctokit } from '@actions/github';
 
 import { uploadAssets } from './upload-release-assets';
-import { getAssetName } from './utils';
+import { deleteGiteaReleaseAsset, getAssetName } from './utils';
 
 import type { Artifact, TargetInfo } from './types';
 import { createArtifact } from './utils';
@@ -36,13 +36,17 @@ export async function uploadVersionJSON(
   updaterJsonPreferNsis: boolean,
   updaterJsonKeepUniversal: boolean,
   retryAttempts: number,
+  githubBaseUrl: string,
+  isGitea: boolean,
   assetNamePattern?: string,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
   }
 
-  const github = getOctokit(process.env.GITHUB_TOKEN);
+  const github = getOctokit(process.env.GITHUB_TOKEN, {
+    baseUrl: githubBaseUrl,
+  });
 
   const versionFilename = 'latest.json';
   const versionFile = resolve(process.cwd(), versionFilename);
@@ -62,25 +66,49 @@ export async function uploadVersionJSON(
   const asset = assets.data.find((e) => e.name === versionFilename);
 
   if (asset) {
-    const assetData = (
-      await github.request(
-        'GET /repos/{owner}/{repo}/releases/assets/{asset_id}',
-        {
-          owner: owner,
-          repo: repo,
-          asset_id: asset.id,
-          headers: {
-            accept: 'application/octet-stream',
+    if (isGitea) {
+      const info = (
+        await github.request(
+          'GET /repos/{owner}/{repo}/releases/{release_id}/assets/{asset_id}',
+          {
+            owner,
+            repo,
+            release_id: releaseId,
+            asset_id: asset.id,
           },
-        },
-      )
-    ).data as unknown as ArrayBuffer;
+        )
+      ).data as { browser_download_url: string };
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    versionContent.platforms = JSON.parse(
-      Buffer.from(assetData).toString(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    ).platforms;
+      const data = (await github.request(`GET ${info.browser_download_url}`))
+        .data as string;
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      versionContent.platforms = JSON.parse(
+        data,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      ).platforms;
+    } else {
+      const assetData = (
+        await github.request(
+          `GET /repos/{owner}/{repo}/releases/assets/{asset_id}`,
+          {
+            owner: owner,
+            repo: repo,
+            release_id: releaseId,
+            asset_id: asset.id,
+            headers: {
+              accept: 'application/octet-stream',
+            },
+          },
+        )
+      ).data as unknown as ArrayBuffer;
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      versionContent.platforms = JSON.parse(
+        Buffer.from(assetData).toString(),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      ).platforms;
+    }
   }
 
   const downloadUrls = new Map<string, string>();
@@ -239,13 +267,17 @@ export async function uploadVersionJSON(
   writeFileSync(versionFile, JSON.stringify(versionContent, null, 2));
 
   if (asset) {
-    // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
-    await github.rest.repos.deleteReleaseAsset({
-      owner: owner,
-      repo: repo,
-      release_id: releaseId,
-      asset_id: asset.id,
-    });
+    if (isGitea) {
+      await deleteGiteaReleaseAsset(github, owner, repo, releaseId, asset.id);
+    } else {
+      // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
+      await github.rest.repos.deleteReleaseAsset({
+        owner: owner,
+        repo: repo,
+        release_id: releaseId,
+        asset_id: asset.id,
+      });
+    }
   }
 
   const artifact = createArtifact({
@@ -258,5 +290,13 @@ export async function uploadVersionJSON(
     version,
   });
 
-  await uploadAssets(owner, repo, releaseId, [artifact], retryAttempts);
+  await uploadAssets(
+    owner,
+    repo,
+    releaseId,
+    [artifact],
+    retryAttempts,
+    githubBaseUrl,
+    isGitea,
+  );
 }

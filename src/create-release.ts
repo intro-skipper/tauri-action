@@ -33,6 +33,7 @@ export async function getOrCreateRelease(
   owner: string,
   repo: string,
   tagName: string,
+  githubBaseUrl: string,
   releaseName?: string,
   body?: string,
   commitish?: string,
@@ -44,7 +45,9 @@ export async function getOrCreateRelease(
   }
 
   // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
-  const github = getOctokit(process.env.GITHUB_TOKEN);
+  const github = getOctokit(process.env.GITHUB_TOKEN, {
+    baseUrl: githubBaseUrl,
+  });
 
   const bodyPath = core.getInput('body_path', { required: false });
   let bodyFileContent: string | null = null;

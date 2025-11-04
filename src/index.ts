@@ -45,6 +45,11 @@ async function run(): Promise<void> {
     const draft = core.getBooleanInput('releaseDraft');
     const prerelease = core.getBooleanInput('prerelease');
     const commitish = core.getInput('releaseCommitish') || null;
+    const githubBaseUrl =
+      core.getInput('githubBaseUrl') ||
+      process.env.GITHUB_API_URL ||
+      'https://api.github.com';
+    const isGitea = core.getBooleanInput('isGitea');
 
     // TODO: Change its default to true for v2 apps
     // Not using getBooleanInput so we can differentiate between true,false,unset later.
@@ -178,6 +183,7 @@ async function run(): Promise<void> {
         owner,
         repo,
         tagName,
+        githubBaseUrl,
         releaseName || undefined,
         body,
         commitish || undefined,
@@ -197,6 +203,8 @@ async function run(): Promise<void> {
         releaseId,
         artifacts,
         retryAttempts,
+        githubBaseUrl,
+        isGitea,
         assetNamePattern,
       );
 
@@ -214,6 +222,8 @@ async function run(): Promise<void> {
           updaterJsonPreferNsis,
           updaterJsonKeepUniversal,
           retryAttempts,
+          githubBaseUrl,
+          isGitea,
           assetNamePattern,
         );
       }

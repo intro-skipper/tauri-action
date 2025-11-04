@@ -42926,12 +42926,14 @@ function allReleases(github, owner, repo) {
     return github.paginate.iterator(github.rest.repos.listReleases.endpoint.merge(params));
 }
 /// Try to get release by tag. If there's none, releaseName is required to create one.
-async function getOrCreateRelease(owner, repo, tagName, releaseName, body, commitish, draft = true, prerelease = true) {
+async function getOrCreateRelease(owner, repo, tagName, githubBaseUrl, releaseName, body, commitish, draft = true, prerelease = true) {
     if (process.env.GITHUB_TOKEN === undefined) {
         throw new Error('GITHUB_TOKEN is required');
     }
     // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
-    const github = (0,_actions_github__WEBPACK_IMPORTED_MODULE_2__.getOctokit)(process.env.GITHUB_TOKEN);
+    const github = (0,_actions_github__WEBPACK_IMPORTED_MODULE_2__.getOctokit)(process.env.GITHUB_TOKEN, {
+        baseUrl: githubBaseUrl,
+    });
     const bodyPath = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('body_path', { required: false });
     let bodyFileContent = null;
     if (bodyPath !== '' && !!bodyPath) {
@@ -43067,6 +43069,10 @@ async function run() {
         const draft = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('releaseDraft');
         const prerelease = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('prerelease');
         const commitish = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('releaseCommitish') || null;
+        const githubBaseUrl = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('githubBaseUrl') ||
+            process.env.GITHUB_API_URL ||
+            'https://api.github.com';
+        const isGitea = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('isGitea');
         // TODO: Change its default to true for v2 apps
         // Not using getBooleanInput so we can differentiate between true,false,unset later.
         const updaterJsonPreferNsis = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('updaterJsonPreferNsis')?.toLowerCase() === 'true';
@@ -43150,16 +43156,16 @@ async function run() {
                 releaseName = releaseName.replace(regex, template.value);
                 body = body.replace(regex, template.value);
             });
-            const releaseData = await (0,_create_release__WEBPACK_IMPORTED_MODULE_4__/* .getOrCreateRelease */ .l)(owner, repo, tagName, releaseName || undefined, body, commitish || undefined, draft, prerelease);
+            const releaseData = await (0,_create_release__WEBPACK_IMPORTED_MODULE_4__/* .getOrCreateRelease */ .l)(owner, repo, tagName, githubBaseUrl, releaseName || undefined, body, commitish || undefined, draft, prerelease);
             releaseId = releaseData.id;
             _actions_core__WEBPACK_IMPORTED_MODULE_2__.setOutput('releaseUploadUrl', releaseData.uploadUrl);
             _actions_core__WEBPACK_IMPORTED_MODULE_2__.setOutput('releaseId', releaseData.id.toString());
             _actions_core__WEBPACK_IMPORTED_MODULE_2__.setOutput('releaseHtmlUrl', releaseData.htmlUrl);
         }
         if (releaseId) {
-            await (0,_upload_release_assets__WEBPACK_IMPORTED_MODULE_5__/* .uploadAssets */ .r)(owner, repo, releaseId, artifacts, retryAttempts, assetNamePattern);
+            await (0,_upload_release_assets__WEBPACK_IMPORTED_MODULE_5__/* .uploadAssets */ .r)(owner, repo, releaseId, artifacts, retryAttempts, githubBaseUrl, isGitea, assetNamePattern);
             if (includeUpdaterJson) {
-                await (0,_upload_version_json__WEBPACK_IMPORTED_MODULE_6__/* .uploadVersionJSON */ .Y)(owner, repo, info.version, body, tagName, releaseId, releaseArtifacts.length !== 0 ? releaseArtifacts : debugArtifacts, targetInfo, info.unzippedSigs, updaterJsonPreferNsis, updaterJsonKeepUniversal, retryAttempts, assetNamePattern);
+                await (0,_upload_version_json__WEBPACK_IMPORTED_MODULE_6__/* .uploadVersionJSON */ .Y)(owner, repo, info.version, body, tagName, releaseId, releaseArtifacts.length !== 0 ? releaseArtifacts : debugArtifacts, targetInfo, info.unzippedSigs, updaterJsonPreferNsis, updaterJsonKeepUniversal, retryAttempts, githubBaseUrl, isGitea, assetNamePattern);
             }
         }
         else {
@@ -43193,11 +43199,13 @@ __webpack_async_result__();
 
 
 
-async function uploadAssets(owner, repo, releaseId, assets, retryAttempts, assetNamePattern) {
+async function uploadAssets(owner, repo, releaseId, assets, retryAttempts, githubBaseUrl, isGitea, assetNamePattern) {
     if (process.env.GITHUB_TOKEN === undefined) {
         throw new Error('GITHUB_TOKEN is required');
     }
-    const github = (0,_actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit)(process.env.GITHUB_TOKEN);
+    const github = (0,_actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit)(process.env.GITHUB_TOKEN, {
+        baseUrl: githubBaseUrl,
+    });
     const existingAssets = (await github.rest.repos.listReleaseAssets({
         owner: owner,
         repo: repo,
@@ -43221,11 +43229,16 @@ async function uploadAssets(owner, repo, releaseId, assets, retryAttempts, asset
                 .replace(/[\u0300-\u036f]/g, ''));
         if (existingAsset) {
             console.log(`Deleting existing ${assetName}...`);
-            await github.rest.repos.deleteReleaseAsset({
-                owner: owner,
-                repo: repo,
-                asset_id: existingAsset.id,
-            });
+            if (isGitea) {
+                await (0,_utils__WEBPACK_IMPORTED_MODULE_2__/* .deleteGiteaReleaseAsset */ .Rx)(github, owner, repo, releaseId, existingAsset.id);
+            }
+            else {
+                await github.rest.repos.deleteReleaseAsset({
+                    owner: owner,
+                    repo: repo,
+                    asset_id: existingAsset.id,
+                });
+            }
         }
         console.log(`Uploading ${assetName}...`);
         await (0,_utils__WEBPACK_IMPORTED_MODULE_2__/* .retry */ .L5)(() => github.rest.repos.uploadReleaseAsset({
@@ -43237,6 +43250,7 @@ async function uploadAssets(owner, repo, releaseId, assets, retryAttempts, asset
             owner: owner,
             repo: repo,
             release_id: releaseId,
+            baseUrl: githubBaseUrl,
         }), retryAttempts + 1);
     }
 }
@@ -43264,11 +43278,13 @@ async function uploadAssets(owner, repo, releaseId, assets, retryAttempts, asset
 
 
 
-async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId, artifacts, targetInfo, unzippedSig, updaterJsonPreferNsis, updaterJsonKeepUniversal, retryAttempts, assetNamePattern) {
+async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId, artifacts, targetInfo, unzippedSig, updaterJsonPreferNsis, updaterJsonKeepUniversal, retryAttempts, githubBaseUrl, isGitea, assetNamePattern) {
     if (process.env.GITHUB_TOKEN === undefined) {
         throw new Error('GITHUB_TOKEN is required');
     }
-    const github = (0,_actions_github__WEBPACK_IMPORTED_MODULE_2__.getOctokit)(process.env.GITHUB_TOKEN);
+    const github = (0,_actions_github__WEBPACK_IMPORTED_MODULE_2__.getOctokit)(process.env.GITHUB_TOKEN, {
+        baseUrl: githubBaseUrl,
+    });
     const versionFilename = 'latest.json';
     const versionFile = (0,node_path__WEBPACK_IMPORTED_MODULE_1__.resolve)(process.cwd(), versionFilename);
     const versionContent = {
@@ -43285,16 +43301,31 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
     });
     const asset = assets.data.find((e) => e.name === versionFilename);
     if (asset) {
-        const assetData = (await github.request('GET /repos/{owner}/{repo}/releases/assets/{asset_id}', {
-            owner: owner,
-            repo: repo,
-            asset_id: asset.id,
-            headers: {
-                accept: 'application/octet-stream',
-            },
-        })).data;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        versionContent.platforms = JSON.parse(Buffer.from(assetData).toString()).platforms;
+        if (isGitea) {
+            const info = (await github.request('GET /repos/{owner}/{repo}/releases/{release_id}/assets/{asset_id}', {
+                owner,
+                repo,
+                release_id: releaseId,
+                asset_id: asset.id,
+            })).data;
+            const data = (await github.request(`GET ${info.browser_download_url}`))
+                .data;
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            versionContent.platforms = JSON.parse(data).platforms;
+        }
+        else {
+            const assetData = (await github.request(`GET /repos/{owner}/{repo}/releases/assets/{asset_id}`, {
+                owner: owner,
+                repo: repo,
+                release_id: releaseId,
+                asset_id: asset.id,
+                headers: {
+                    accept: 'application/octet-stream',
+                },
+            })).data;
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            versionContent.platforms = JSON.parse(Buffer.from(assetData).toString()).platforms;
+        }
     }
     const downloadUrls = new Map();
     for (const data of assets.data) {
@@ -43424,13 +43455,18 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
     }
     (0,node_fs__WEBPACK_IMPORTED_MODULE_0__.writeFileSync)(versionFile, JSON.stringify(versionContent, null, 2));
     if (asset) {
-        // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
-        await github.rest.repos.deleteReleaseAsset({
-            owner: owner,
-            repo: repo,
-            release_id: releaseId,
-            asset_id: asset.id,
-        });
+        if (isGitea) {
+            await (0,_utils__WEBPACK_IMPORTED_MODULE_4__/* .deleteGiteaReleaseAsset */ .Rx)(github, owner, repo, releaseId, asset.id);
+        }
+        else {
+            // https://docs.github.com/en/rest/releases/assets#update-a-release-asset
+            await github.rest.repos.deleteReleaseAsset({
+                owner: owner,
+                repo: repo,
+                release_id: releaseId,
+                asset_id: asset.id,
+            });
+        }
     }
     const artifact = (0,_utils__WEBPACK_IMPORTED_MODULE_4__/* .createArtifact */ .Dg)({
         path: versionFile,
@@ -43441,7 +43477,7 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
         bundle: '',
         version,
     });
-    await (0,_upload_release_assets__WEBPACK_IMPORTED_MODULE_3__/* .uploadAssets */ .r)(owner, repo, releaseId, [artifact], retryAttempts);
+    await (0,_upload_release_assets__WEBPACK_IMPORTED_MODULE_3__/* .uploadAssets */ .r)(owner, repo, releaseId, [artifact], retryAttempts, githubBaseUrl, isGitea);
 }
 
 
@@ -43454,6 +43490,7 @@ async function uploadVersionJSON(owner, repo, version, notes, tagName, releaseId
 // EXPORTS
 __nccwpck_require__.d(__webpack_exports__, {
   Dg: () => (/* binding */ createArtifact),
+  Rx: () => (/* binding */ deleteGiteaReleaseAsset),
   NK: () => (/* binding */ execCommand),
   wm: () => (/* binding */ getAssetName),
   Vp: () => (/* binding */ getInfo),
@@ -53501,6 +53538,16 @@ async function retry(fn, attempts) {
             console.log(`Attempt ${attempt} failed, retrying...`);
         }
     }
+}
+// Helper function to delete a Gitea release asset
+// This is a workaround since Gitea's API is incompatible with the GitHub API
+function deleteGiteaReleaseAsset(github, owner, repo, releaseId, assetId) {
+    return github.request('DELETE /repos/{owner}/{repo}/releases/{release_id}/assets/{asset_id}', {
+        owner,
+        repo,
+        release_id: releaseId,
+        asset_id: assetId,
+    });
 }
 // TODO: Properly resolve the eslint issues in this file.
 

@@ -2,7 +2,7 @@ import fs from 'node:fs';
 
 import { getOctokit } from '@actions/github';
 
-import { getAssetName, retry } from './utils';
+import { deleteGiteaReleaseAsset, getAssetName, retry } from './utils';
 import type { Artifact } from './types';
 
 export async function uploadAssets(
@@ -11,13 +11,17 @@ export async function uploadAssets(
   releaseId: number,
   assets: Artifact[],
   retryAttempts: number,
+  githubBaseUrl: string,
+  isGitea: boolean,
   assetNamePattern?: string,
 ) {
   if (process.env.GITHUB_TOKEN === undefined) {
     throw new Error('GITHUB_TOKEN is required');
   }
 
-  const github = getOctokit(process.env.GITHUB_TOKEN);
+  const github = getOctokit(process.env.GITHUB_TOKEN, {
+    baseUrl: githubBaseUrl,
+  });
 
   const existingAssets = (
     await github.rest.repos.listReleaseAssets({
@@ -49,13 +53,24 @@ export async function uploadAssets(
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, ''),
     );
+
     if (existingAsset) {
       console.log(`Deleting existing ${assetName}...`);
-      await github.rest.repos.deleteReleaseAsset({
-        owner: owner,
-        repo: repo,
-        asset_id: existingAsset.id,
-      });
+      if (isGitea) {
+        await deleteGiteaReleaseAsset(
+          github,
+          owner,
+          repo,
+          releaseId,
+          existingAsset.id,
+        );
+      } else {
+        await github.rest.repos.deleteReleaseAsset({
+          owner: owner,
+          repo: repo,
+          asset_id: existingAsset.id,
+        });
+      }
     }
 
     console.log(`Uploading ${assetName}...`);
@@ -71,6 +86,7 @@ export async function uploadAssets(
           owner: owner,
           repo: repo,
           release_id: releaseId,
+          baseUrl: githubBaseUrl,
         }),
       retryAttempts + 1,
     );
