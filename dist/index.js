@@ -43250,7 +43250,6 @@ async function uploadAssets(owner, repo, releaseId, assets, retryAttempts, githu
             owner: owner,
             repo: repo,
             release_id: releaseId,
-            baseUrl: githubBaseUrl,
         }), retryAttempts + 1);
     }
 }
