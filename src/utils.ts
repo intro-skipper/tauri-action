@@ -99,9 +99,20 @@ export function getAssetName(asset: Artifact, pattern?: string) {
       asset as unknown as Record<string, string>,
     );
   } else {
+    if (
+      asset.mode !== 'debug' &&
+      asset.ext !== '.app.tar.gz' &&
+      asset.ext !== '.app.tar.gz.sig' &&
+      asset.name !== 'binary'
+    ) {
+      // See TODO above, in most cases we keep the file name set by tauri's cli.
+      return basename(asset.path);
+    }
+
     const name = basename(asset.path, asset.ext);
     let arch = '';
     let dbg = '';
+    let platform = '';
 
     if (
       asset.ext === '.app.tar.gz' ||
@@ -114,7 +125,12 @@ export function getAssetName(asset: Artifact, pattern?: string) {
     if (asset.mode === 'debug') {
       dbg = '-debug';
     }
-    return name + '_' + asset.platform + arch + dbg + asset.ext;
+
+    if (asset.name === 'binary') {
+      platform = '_' + asset.platform;
+    }
+
+    return name + platform + arch + dbg + asset.ext;
   }
 }
 

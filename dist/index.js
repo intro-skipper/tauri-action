@@ -2058,7 +2058,7 @@ const Context = __importStar(__nccwpck_require__(3077));
 const Utils = __importStar(__nccwpck_require__(8399));
 // octokit + plugins
 const core_1 = __nccwpck_require__(1772);
-const plugin_rest_endpoint_methods_1 = __nccwpck_require__(6316);
+const plugin_rest_endpoint_methods_1 = __nccwpck_require__(6363);
 const plugin_paginate_rest_1 = __nccwpck_require__(8633);
 exports.context = new Context.Context();
 const baseUrl = Utils.getApiBaseUrl();
@@ -7678,7 +7678,7 @@ paginateRest.VERSION = VERSION;
 
 /***/ }),
 
-/***/ 6316:
+/***/ 6363:
 /***/ ((module) => {
 
 
@@ -43051,6 +43051,7 @@ async function run() {
         const iconPath = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('iconPath');
         const appName = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('appName');
         const appVersion = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput('appVersion');
+        // TODO for v1 (since we recommended v0 instead of v0.x so far): Remove includeRelease && includeDebug and automatically resolve the target dir. If users want both types, they should run the action twice.
         const includeRelease = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('includeRelease');
         const includeDebug = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('includeDebug');
         const includeUpdaterJson = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getBooleanInput('includeUpdaterJson');
@@ -53238,9 +53239,17 @@ function getAssetName(asset, pattern) {
         return renderNamePattern(pattern, asset);
     }
     else {
+        if (asset.mode !== 'debug' &&
+            asset.ext !== '.app.tar.gz' &&
+            asset.ext !== '.app.tar.gz.sig' &&
+            asset.name !== 'binary') {
+            // See TODO above, in most cases we keep the file name set by tauri's cli.
+            return (0,external_node_path_.basename)(asset.path);
+        }
         const name = (0,external_node_path_.basename)(asset.path, asset.ext);
         let arch = '';
         let dbg = '';
+        let platform = '';
         if (asset.ext === '.app.tar.gz' ||
             asset.ext === '.app.tar.gz.sig' ||
             asset.name === 'binary') {
@@ -53249,7 +53258,10 @@ function getAssetName(asset, pattern) {
         if (asset.mode === 'debug') {
             dbg = '-debug';
         }
-        return name + '_' + asset.platform + arch + dbg + asset.ext;
+        if (asset.name === 'binary') {
+            platform = '_' + asset.platform;
+        }
+        return name + platform + arch + dbg + asset.ext;
     }
 }
 function createArtifact({ path, name, debug, platform, arch, bundle, version, }) {
