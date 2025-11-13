@@ -1,6 +1,6 @@
 name: 'tauri-action'
 description: 'Build tauri binaries for MacOS, Windows and Linux'
-author: 'Lucas Nogueira <lucas@tauri.studio>'
+author: 'Tauri Programme within The Commons Conservancy'
 branding:
   icon: 'box'
   color: 'blue'
