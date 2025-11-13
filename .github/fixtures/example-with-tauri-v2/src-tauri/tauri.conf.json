@@ -1,4 +1,5 @@
 {
+  "$schema": "https://schema.tauri.app/config/2",
   "productName": "TauriExample App (v2)",
   "version": "0.1.2",
   "identifier": "com.tauri.actiontest",
@@ -28,11 +29,18 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-		"windows": {
-			"nsis": {
-				"compression": "none"
-			}
-		}
+    "windows": {
+      "nsis": {
+        "compression": "none"
+      }
+    },
+    "linux": {
+      "rpm": {
+        "compression": {
+          "type": "none"
+        }
+      }
+    }
   },
   "plugins": {
     "updater": {
