@@ -4,6 +4,7 @@ import {
   hasTauriScript,
   retry,
   usesBun,
+  usesNpm,
   usesPnpm,
   usesYarn,
 } from './utils';
@@ -46,20 +47,27 @@ async function getRunner(
   tauriScript: string | null,
 ): Promise<Runner> {
   if (tauriScript) {
+    console.log('`tauriScript` set. Skipping cli verification.');
     // FIXME: This will also split file paths with spaces.
     const [runnerCommand, ...runnerArgs] = tauriScript.split(' ');
     return new Runner(runnerCommand, runnerArgs);
   }
 
   if (hasDependency('@tauri-apps/cli', root)) {
+    // usesX also check if the runner executable exists.
     if (usesYarn(root)) return new Runner('yarn', ['tauri']);
     if (usesPnpm(root)) return new Runner('pnpm', ['tauri']);
     if (usesBun(root)) return new Runner('bun', ['tauri']);
-    return new Runner('npm', [hasTauriScript(root) ? 'run' : 'exec', 'tauri']);
+    // npm should always be available in a GitHub runner but we'll check for it anyway.
+    if (usesNpm(root))
+      return new Runner('npm', [
+        hasTauriScript(root) ? 'run' : 'exec',
+        'tauri',
+      ]);
   }
 
   console.warn(
-    'Could not detect `@tauri-apps/cli` installation. Proceeding to install global npm package...',
+    'Could not detect valid `@tauri-apps/cli` installation. Proceeding to install global npm package...',
   );
 
   await execCommand('npm', ['install', '-g', `@tauri-apps/cli@v2`], {
