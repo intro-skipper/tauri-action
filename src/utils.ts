@@ -140,6 +140,14 @@ export function createArtifact({
   const baseName = basename(path);
   const exts = extensions.filter((s) => baseName.includes(s));
   const ext = exts[0] || extname(path);
+  let workflowArtifactName;
+  if (
+    name === 'binary' ||
+    ['.app', '.dmg', '.exe', '.msi', '.deb', '.rpm', '.AppImage'].includes(ext)
+  ) {
+    workflowArtifactName = `${platform}-${arch}-${bundle}`;
+  }
+
   return {
     path,
     name,
@@ -149,8 +157,9 @@ export function createArtifact({
     bundle,
     ext,
     version,
-    setup: bundle == 'nsis' ? '-setup' : '',
-    _setup: bundle == 'nsis' ? '_setup' : '',
+    setup: bundle === 'nsis' ? '-setup' : '',
+    _setup: bundle === 'nsis' ? '_setup' : '',
+    workflowArtifactName,
   };
 }
 

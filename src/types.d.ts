@@ -17,7 +17,6 @@ export interface Asset {
 }
 
 export interface Artifact {
-  path: string;
   name: string;
   mode: 'debug' | 'release';
   platform: Exclude<TargetPlatform, 'macos'> | 'darwin';
@@ -27,6 +26,9 @@ export interface Artifact {
   version: string;
   setup: '-setup' | '';
   _setup: '_setup' | '';
+  // Undocumented because it's intended for internal use
+  path: string;
+  workflowArtifactName?: string;
 }
 
 export interface BuildOptions {
