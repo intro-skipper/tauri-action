@@ -64,8 +64,8 @@ async function run(): Promise<void> {
     const shouldUploadWorkflowArtifacts = core.getBooleanInput(
       'uploadWorkflowArtifacts',
     );
-    const workflowArtifactsNamePattern =
-      core.getInput('workflowArtifactsNamePattern') ||
+    const workflowArtifactNamePattern =
+      core.getInput('workflowArtifactNamePattern') ||
       '[platform]-[arch]-[bundle]';
     const uploadUpdaterSignatures = core.getBooleanInput(
       'uploadUpdaterSignatures',
@@ -122,7 +122,7 @@ async function run(): Promise<void> {
     if (shouldUploadWorkflowArtifacts) {
       await uploadWorkflowArtifacts(
         artifacts,
-        workflowArtifactsNamePattern,
+        workflowArtifactNamePattern,
         retryAttempts,
       );
     }
