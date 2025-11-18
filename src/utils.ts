@@ -193,6 +193,7 @@ export function getTauriDir(): string | null {
   const tauriConfPaths = globbySync(
     ['**/tauri.conf.json', '**/tauri.conf.json5', '**/Tauri.toml'],
     {
+      // globby v16 changes this to also look into parent dir. Monitor this closely and disable if needed.
       gitignore: true,
       cwd: projectPath,
       // Forcefully ignore target and node_modules dirs
