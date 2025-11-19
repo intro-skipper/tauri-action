@@ -2,7 +2,7 @@
 
 This GitHub Action builds your Tauri application as a native binary for macOS, Linux and Windows and optionally upload it to a GitHub Release.
 
-## Usage
+## Example
 
 **_For more workflow examples, check out the [examples](examples) directory._**
 
@@ -34,7 +34,7 @@ jobs:
             args: '--target aarch64-apple-darwin'
           - platform: 'macos-latest' # for Intel based macs.
             args: '--target x86_64-apple-darwin'
-          - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
+          - platform: 'ubuntu-22.04'
             args: ''
           - platform: 'windows-latest'
             args: ''
@@ -75,44 +75,176 @@ jobs:
           args: ${{ matrix.args }}
 ```
 
-## Inputs
+## Usage
 
-### Build Options
+```yml
+- uses: tauri-apps/tauri-action@v1
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  with:
+    # The id of the release to upload artifacts as release assets.
+    # If set, `tagName` and `releaseName` will NOT be considered to find a release.
+    #
+    # default: unset
+    releaseId: ''
 
-These inputs allow you to change how your Tauri project will be build.
+    # The tag name of the release to upload/create or the tag of the release belonging to `releaseId`.
+    # If this points to an existing release `releaseDraft` must match the status of that release.
+    # If `releaseId` is set but this is not, the `latest.json` file will
+    # point to `releases/latest/download/<bundle>` instead of the tag.
+    #
+    # default: unset
+    tagName: ''
 
-| Name                    | Description                                                                                                        | Type   | Default                                                                        |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------ |
-| `projectPath`           | The path to the root of the tauri project relative to the current working directory. It must NOT be gitignored.    | string | .                                                                              |
-| `includeUpdaterJson`    | whether to upload a JSON file for the updater or not (only relevant if the updater is configured)                  | bool   | true                                                                           |
-| `updaterJsonPreferNsis` | whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist    | bool   | `false`. May be changed to `true` for projects using `tauri@v2` in the future. |
-| `tauriScript`           | the script to execute the Tauri CLI. It must not include any args or commands like `build`                         | string | `npm run\|pnpm\|yarn tauri`                                                    |
-| `args`                  | Additional arguments to the current build command                                                                  | string |                                                                                |
-| `retryAttempts`         | The number of times to re-try building the app if the initial build fails or uploading assets if the upload fails. | number | 0                                                                              |
+    # The name of the release to create.
+    # Required if `releaseId` is not set and there's no existing release for `tagName`.
+    #
+    # default: ""
+    releaseName: ''
 
-### Release Configuration
+    # The body of the release to create.
+    #
+    # default: ""
+    releaseBody: ''
 
-These inputs allow you to modify the GitHub release.
+    # Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists.
+    #
+    # default: SHA of current commit
+    releaseCommitish: ''
 
-| Name                          | Description                                                                                                                                                                                                                                                                                      | Type   | Default                                     |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ------------------------------------------- |
-| `releaseId`                   | The id of the release to upload artifacts as release assets. If set, `tagName` and `releaseName` will not be considered to find a release.                                                                                                                                                       | number |                                             |
-| `tagName`                     | The tag name of the release to upload/create or the tag of the release belonging to `releaseId`                                                                                                                                                                                                  | string |                                             |
-| `releaseName`                 | The name of the release to create. Required if there's no existing release for `tagName`                                                                                                                                                                                                         | string |                                             |
-| `releaseBody`                 | The body of the release to create                                                                                                                                                                                                                                                                | string |                                             |
-| `releaseDraft`                | Whether the release to find or create is a draft or not                                                                                                                                                                                                                                          | bool   | false                                       |
-| `prerelease`                  | Whether the release to create is a prerelease or not                                                                                                                                                                                                                                             | bool   | false                                       |
-| `releaseCommitish`            | Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists.                                                                                                                                                                                                      | string | SHA of current commit                       |
-| `generateReleaseNotes`        | Whether to use GitHub's Release Notes API to generate the release title and body. If `releaseName` is set, it will overwrite the generated title. If `releaseBody` is set, it will be pre-pended to the automatically generated notes. This action is not responsible for the generated content. | bool   | false                                       |
-| `owner`                       | The account owner of the repository the release will be uploaded to. Requires `GITHUB_TOKEN` in env and a `releaseCommitish` target if it doesn't match the current repo.                                                                                                                        | string | owner of the current repo                   |
-| `repo`                        | The name of the repository the release will be uploaded to. Requires `GITHUB_TOKEN` in env and a `releaseCommitish` target if it doesn't match the current repo.                                                                                                                                 | string | name of the current repo                    |
-| `githubBaseUrl`               | The base URL of the GitHub API to use. This is useful if you want to use a self-hosted GitHub instance or a GitHub Enterprise server.                                                                                                                                                            | string | `$GITHUB_API_URL` or https://api.github.com |
-| `isGitea`                     | Whether to run in Gitea compatibility mode. Set this if `githubBaseUrl` targets a Gitea instance, since some API endpoints differ from GitHub.                                                                                                                                                   | bool   | false                                       |
-| `releaseAssetNamePattern`     | The naming pattern to use for the uploaded assets. If not set, the names given by Tauri's CLI are kept.                                                                                                                                                                                          | string | none                                        |
-| `uploadPlainBinary`           | Whether to upload the unbundled executable binary or not. Requires Tauri v2+. To prevent issues with Tauri's [`bundle_type`](https://docs.rs/tauri-utils/latest/tauri_utils/platform/fn.bundle_type.html) value this should only be used with the `--no-bundle` flag.                            | bool   | false                                       |
-| `uploadWorkflowArtifacts`     | Whether to upload the bundles and executables as [workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts). Independent from the release configs. Affected by `uploadPlainBinary`.                                                              | bool   | false                                       |
-| `workflowArtifactNamePattern` | The naming pattern to use for uploaded [workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts). Ignored if `uploadWorkflowArtifacts` is not enabled.                                                                                          | string | `[platform]-[arch]-[bundle]`                |
-| `uploadUpdaterSignatures`     | Whether to upload the .sig files generated by Tauri. Does not affect the `latest.json` generator.                                                                                                                                                                                                | bool   | true                                        |
+    # Whether the release to find or create is a draft or not.
+    #
+    # default: false
+    releaseDraft: false
+
+    # Whether the release to create is a prerelease or not.
+    #
+    # default: false
+    prerelease: false
+
+    # Whether to use GitHub's Release Notes API to generate the release title and body.
+    # If `releaseName` is set, it will overwrite the generated title.
+    # If `releaseBody` is set, it will be pre-pended to the automatically generated notes.
+    # This action is not responsible for the generated content.
+    #
+    # default: false
+    generateReleaseNotes: false
+
+    # The account owner of the repository the release will be uploaded to.
+    # Requires `GITHUB_TOKEN` in env and a `releaseCommitish` target if it doesn't match the current repo.
+    #
+    # default: owner of the current repo
+    owner: ''
+
+    # The name of the repository the release will be uploaded to.
+    # Requires `GITHUB_TOKEN` in env and a `releaseCommitish` target if it doesn't match the current repo.
+    #
+    # default: name of the current repo
+    repo: ''
+
+    # The base URL of the GitHub API to use.
+    # This is useful if you want to use a self-hosted GitHub instance or a GitHub Enterprise server.
+    #
+    # default: $GITHUB_API_URL or "https://api.github.com"
+    githubBaseUrl: ''
+
+    # Whether to run in Gitea compatibility mode. Set this if `githubBaseUrl` targets a Gitea instance,
+    # since some API endpoints differ from GitHub.
+    # Gitea support is experimental. It was implemented and tested solely by the community.
+    #
+    # default: false
+    isGitea: false
+
+    # The path to the root of the tauri project relative to the current working directory.
+    # It must NOT be gitignored. Please open an issue if this causes problems.
+    #
+    # Relative paths provided via the `--config` flag will be resolved relative to this path.
+    #
+    # default: ./
+    projectPath: ''
+
+    # The number of times to re-try building the app if the initial build fails or uploading assets if the upload fails.
+    # Some small internal steps may be re-tried regardless of this config.
+    #
+    # default: 0
+    retryAttempts: 0
+
+    # Whether to upload a JSON file for the updater or not (only relevant if the updater is configured).
+    # This file assume you're using the GitHub Release as your updater endpoint.
+    #
+    # default: true
+    includeUpdaterJson: true
+
+    # Whether the action will use the NSIS (setup.exe) or WiX (.msi) bundles for the updater JSON if both types exist.
+    #
+    # default: false (for legacy reasons)
+    updaterJsonPreferNsis: false
+
+    # The script to execute the Tauri CLI. It must not include any args or commands like `build`.
+    # It can also be an absolute path without spaces pointing to a `tauri-cli` binary.
+    #
+    # default: "npm|pnpm|yarn|bun tauri" or "tauri" if the action had to install the CLI.
+    tauriScript: ''
+
+    # Additional arguments to the current tauri build command.
+    # Relative paths in the `--config` flag will be resolved relative to `projectPath`.
+    #
+    # default: ""
+    args: ''
+
+    # The naming pattern to use for the uploaded assets.
+    #
+    # Currently available variables are:
+    # - `[name]`: base filename / appname (Product Name)
+    # - `[version]`: app version
+    # - `[platform]`: target platform (OS)
+    # - `[arch]`: target architecture - format differs per platform
+    # - `[ext]`: file extension (`.app`, `.dmg`, `.msi`, `.exe`, `.AppImage`, `.deb`, `.rpm`)
+    # - `[mode]`: `debug` or `release` depending on the use of the `--debug` flag.
+    # - `[setup]`: `-setup` for the NSIS installer or an empty string for all other types.
+    # - `[_setup]`: `_setup` for the NSIS installer or an empty string for all other types.
+    # - `[bundle]`: one of `app`, `dmg`, `msi`, `nsis`, `appimage`, `deb`, `rpm`, `bin`.
+    #
+    # default: If not set, the names given by Tauri's CLI are kept.
+    releaseAssetNamePattern: ''
+
+    # Whether to upload the unbundled executable binary or not. Requires Tauri v2+.
+    # To prevent issues with Tauri's `bundle_type` value (used by e.g. the updater) this
+    # should only be used with the `--no-bundle` flag.
+    # ONLY ENABLE THIS IF YOU KNOW WHAT YOU'RE DOING since Tauri does NOT officially support a portable mode,
+    # especially on platforms other than Windows where
+    # standalone binaries for GUI applications do not exist.
+    #
+    # Ref: https://docs.rs/tauri-utils/latest/tauri_utils/platform/fn.bundle_type.html
+    #
+    # default: false
+    uploadPlainBinary: false
+
+    # Whether to upload the bundles and executables as "workflow artifacts".
+    # Independent from the release configs.
+    # Affected by `uploadPlainBinary`.
+    #
+    # Ref: https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts
+    #
+    # default: false
+    uploadWorkflowArtifacts: false
+
+    # The naming pattern to use for uploaded "workflow artifacts".
+    # Ignored if `uploadWorkflowArtifacts` is not enabled.
+    #
+    # See `releaseAssetNamePattern` for a list of replacement variables.
+    #
+    # Ref: https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts
+    #
+    # default: "[platform]-[arch]-[bundle]"
+    workflowArtifactNamePattern: ''
+
+    # Whether to upload the .sig files generated by Tauri.
+    # Does not affect the `latest.json` generator.
+    #
+    # default: true
+    uploadUpdaterSignatures: true
+```
 
 ## Outputs
 
@@ -127,25 +259,33 @@ These inputs allow you to modify the GitHub release.
 ## Tips and Caveats
 
 - You can run custom Tauri CLI scripts with the `tauriScript` option. So instead of running `yarn tauri <COMMAND> <ARGS>` or `npm run tauri <COMMAND> <ARGS>`, we'll execute `${tauriScript} <COMMAND> <ARGS>`.
-  - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script.
+  - Useful when you need custom build functionality when creating Tauri apps e.g. a `desktop:build` script or if you use `cargo install tauri-cli`.
   - `tauriScript` can also be an absolute file path pointing to a `tauri-cli` binary. The path currently cannot contain spaces.
+
 - If you want to add additional arguments to the build command, you can use the `args` option. For example, if you're setting a specific target for your build, you can specify `args: --target your-target-arch`.
+
 - When your Tauri app is not in the root of the repo, use the `projectPath` input.
   - Usually it will work without it, but the action will install and use a global `@tauri-apps/cli` installation instead of your project's CLI which can cause issues if you also configured `tauriScript` or if you have multiple `tauri.conf.json` files in your repo.
   - Additionally, relative paths provided via the `--config` flag will be resolved relative to the `projectPath` to match Tauri's behavior.
   - The path must NOT be gitignored. Please open an issue if this causes you problems.
+
 - If `releaseId` is set, the action will use this release to upload assets to. If `tagName` is set the action will try to find an existing release for that tag. If there's none, the action requires `releaseName` to create a new release for the specified `tagName`.
+
 - If you create the release yourself and provide a `releaseId` but do not set `tagName`, the download url for updater bundles in `latest.json` will point to `releases/latest/download/<bundle>` which can cause issues if your repo contains releases that do not include updater bundles.
+
 - If you provide a `tagName` to an existing release, `releaseDraft` must be set to `true` if the existing release is a draft.
+
 - If you only want to build the app without having the action upload any assets, for example if you want to only use [`actions/upload-artifact`](https://github.com/actions/upload-artifact), simply omit `tagName`, `releaseName` and `releaseId`.
+
 - Only enable `uploadPlainBinary` if you are sure what you're doing since Tauri doesn't officially support a portable mode, especially on platforms other than Windows where standalone binaries for GUI applications basically do not exist.
-- `releaseAssetNamePattern` offers a few variables that will be replaced automatically if encapsulated in `[]`. Currently available variables are: `[name]`, `[version]`, `[platform]`, `[arch]`, `[mode]`, `[setup]`, `[_setup]`, `[ext]`, `[bundle]`.
-  - `[mode]` will be replaced with `debug` or `release`, depending on the use of the `--debug` flag in `args`.
-  - `[setup]` will be replaced with `-setup` which can be used to differenciate between the NSIS installer and the binary from `uploadPlainBinary`. For all other bundle types it will be an empty string.
-  - `[_setup]` behaves like `[setup]` but with `_setup` instead of `-setup`.
-  - `[bundle]` will be replaced with one of `app`, `dmg`, `msi`, `nsis`, `appimage`, `deb`, `rpm`, `bin` (for `uploadPlainBinary`). This is likely only useful for `workflowArtifactNamePattern` and _not_ for `releaseAssetNamePattern` because of its conflict with `[ext]`.
+
 - Gitea support is experimental. It was implemented and tested solely by the community.
+
 - `uploadWorkflowArtifacts` will likely be removed once [actions/upload-artifact#331](https://github.com/actions/upload-artifact/issues/331) lands.
+
+- `[setup]` can be used to differenciate between the NSIS installer and the binary from `uploadPlainBinary` (both have the `.exe` extension).
+
+- `[bundle]` is likely only useful for `workflowArtifactNamePattern` and _not_ for `releaseAssetNamePattern` because of its conflict with `[ext]`.
 
 ## Partners
 
